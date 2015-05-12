@@ -1,6 +1,6 @@
 #include "Bullet.hpp"
 
-const float Bullet::lifetime = 1000.0f;
+const float Bullet::lifetime = 250.0f;
 const float Bullet::speed = 0.9f;
 
 Bullet::Bullet(sf::Vector2f position, float angle):

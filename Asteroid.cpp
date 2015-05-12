@@ -1,6 +1,6 @@
 #include "Asteroid.hpp"
 
-const float Asteroid::speed[3] = {0.03f, 0.05f, 0.07f};
+const float Asteroid::speed[3] = {0.06f, 0.1f, 0.2f};//x2
 const float Asteroid::radius[3] = {40.0f, 20.0f, 10.0f};
 
 Asteroid::Asteroid(int level):

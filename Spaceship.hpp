@@ -19,9 +19,16 @@ class Spaceship: public sf::Drawable, public sf::Transformable {
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         void onEvent(const sf::Event& event);
 
+        void addScore(int);
+        int  getScore();
+
+        int lives;
+
     private:
+
         sf::Vector2f speed;
         sf::ConvexShape shape;
         int h_move, v_move;
+        int score;
 };
 #endif

@@ -18,6 +18,9 @@ Spaceship::Spaceship() {
     h_move = 0;
     v_move = 0;
 
+    score = 0;
+    lives = 3;
+
     reset();
 }
 
@@ -74,11 +77,19 @@ void Spaceship::onEvent(const sf::Event& event) {
     v_move = 0;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        v_move = 1;
+        v_move = 5;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         h_move = 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         v_move = -1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         h_move = -1;
+}
+
+void Spaceship::addScore(int deltaScore){
+    score += deltaScore;
+}
+
+int Spaceship::getScore(){
+    return score;
 }
