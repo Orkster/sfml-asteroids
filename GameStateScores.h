@@ -4,6 +4,19 @@
 #include "GameState.hpp"
 #include <string>
 #include <fstream>
+#include <vector>
+
+const int NAME_SIZE = 50;
+
+struct Gamer {
+        char name[NAME_SIZE];
+        int points;
+
+        bool operator()(const Gamer& a, const Gamer& b) const
+            {
+                return a.points >    b.points;
+            }
+};
 
 class GameStateScores : public GameState
 {
@@ -15,21 +28,28 @@ private:
 
     void toMenu();
     void setTextForString(std::string, sf::Vector2f);
+    void setHighScore();
+
+    void drawScores();
 
 public:
 
-    struct Entry{
-        int score;
-        std::string name;
-    };
-
-    std::ifstream myFile;
-
     virtual void draw(const float dt);
     virtual void update(const float dt);
-    virtual void handleInput();
+    virtual void handleInput();    
 
-    GameStateScores(Game* game, int, std::string);
+    bool read(std::vector <Gamer> &);
+    void write(const Gamer &);
+
+    GameStateScores(Game* game);
+    GameStateScores(Game* game, std::string, int);
+
+
+
+    std::vector <Gamer> mass;
+    Gamer rec;
+    char buf[NAME_SIZE];
+    int i = 0;
 };
 
 #endif // GAMESTATESCORES_H

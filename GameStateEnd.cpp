@@ -80,6 +80,7 @@ void GameStateEnd::handleInput() {
                 if(event.key.code == sf::Keyboard::Escape) this->game->window.close();
                 else if(event.key.code == sf::Keyboard::Space) this->menu();
                 else if(event.key.code == sf::Keyboard::BackSpace) userInput.clear();
+                else if(event.key.code == sf::Keyboard::Return) this->highscores();
                 break;
             }
 
@@ -92,6 +93,7 @@ void GameStateEnd::handleInput() {
                     userInput.insert(userInput.getSize(), event.text.unicode);
                     text.setString(userInput);
                 }
+
         }
             default: break;
         }
@@ -102,6 +104,12 @@ void GameStateEnd::handleInput() {
 
 void GameStateEnd::menu(){
     this->game->pushState(new GameStateEditor(this->game));
+
+    return;
+}
+
+void GameStateEnd::highscores(){
+    this->game->pushState(new GameStateScores(this->game, text.getString(), endScore));
 
     return;
 }

@@ -24,13 +24,12 @@ class GameStateGame : public GameState
      std::vector<Asteroid> asteroids;
 
 
+
      bool gameOver;
      int  asteroidCount;
      int  level;
      void createNewWave();
      bool pause = true;
-
-
 
      void endGame();
      void setTextForString(std::string, sf::Vector2f);

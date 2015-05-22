@@ -1,33 +1,64 @@
 #include "SFML/Graphics.hpp"
 
-#include "GameStateScores.h".hpp"
+#include "GameStateScores.h"
 #include "GameStateEditor.hpp"
 #include "GameState.hpp"
 #include "windows.h"
+#include <iostream>
+#include <algorithm>
+#include <conio.h>
 
-GameStateScores::GameStateScores(Game *game, int score, std::string name) {
+#include <QTextStream>
+
+GameStateScores::GameStateScores(Game *game) {
 
     this->game = game;
-    this->game->window.setKeyRepeatEnabled(false );
-    sf::Vector2f pos = sf::Vector2f(this->game->window.getSize());
-    this->view.setSize(pos);
-    pos *= 0.5f;
-    this->view.setCenter(pos);
+    this->game->window.setKeyRepeatEnabled(false);
+
+    font.loadFromFile("Media/font.ttf");
+    textString.setFont(font);
+    textString.setCharacterSize(40);
+    textString.setColor(sf::Color::White);
+
+    i = 0;
+
+    this->read(mass);
+
+}
+
+GameStateScores::GameStateScores(Game *game, std::string name, int score){
+
+    this->game = game;
+    this->game->window.setKeyRepeatEnabled(false);
+
     font.loadFromFile("Media/font.ttf");
     textString.setFont(font);
     textString.setCharacterSize(50);
     textString.setColor(sf::Color::Black);
 
-    //Entry.score = score;
-    //Entry.name = name;
+    strcpy(rec.name, name.c_str());
+    rec.points = score;
+    this->write(rec);
 
+    i = 0;
+
+    this->read(mass);
 }
 
 void GameStateScores::draw(const float dt) {
 
-    this->game->window.setView(this->view);
     this->game->window.clear(sf::Color::Black);
     this->game->window.draw(this->game->background);
+
+    i = 0;
+    while(i < mass.size()){
+        setTextForString(mass[i].name, sf::Vector2f(110,160 + 50 * i));
+        setTextForString(std::to_string(mass[i].points), sf::Vector2f(540,160 + 50 * i));
+        std::cout<< std::endl;
+        std::cout << mass[i].name;
+        std::cout << mass[i].points;
+        i++;
+    }
 
     return;
 }
@@ -71,11 +102,43 @@ void GameStateScores::handleInput() {
     return;
 }
 
+bool GameStateScores::read(std::vector <Gamer> &vec) {
+        Gamer tmp;
+
+        FILE *input = fopen("table.txt", "rt");
+        if (input == NULL){
+                std::cout << "bad";
+                return false;
+        }
+
+        while (!feof(input)) {
+                fscanf(input, "%s %d", tmp.name, &tmp.points);
+                vec.push_back(tmp);
+                std:: cout << tmp.name;
+                std:: cout << tmp.points;
+        }
+
+         std::sort(vec.begin(), vec.end(), Gamer());
+
+        fclose(input);
+
+        return true;
+}
+
+void GameStateScores::write(const Gamer &record) {
+        FILE *output = fopen("table.txt", "a+");
+
+        fprintf(output, "\n%s %d", record.name, record.points);
+
+        fclose(output);
+}
+
 void GameStateScores::toMenu(){
     this->game->pushState(new GameStateEditor(this->game));
 
     return;
 }
+
 
 void GameStateScores::setTextForString(std::string text, sf::Vector2f pos){
     textString.setColor(sf::Color::White);

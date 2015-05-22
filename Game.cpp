@@ -87,7 +87,7 @@ int Game::run() {
             if(!gamePause)
               peekState()->update(dt);
 
-            this->window.clear(sf::Color::Black);
+            //this->window.clear(sf::Color::Black);
             peekState()->draw(dt);
             this->window.display();
         }

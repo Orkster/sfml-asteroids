@@ -4,6 +4,7 @@
 #include "GameStateEditor.hpp"
 #include "GameStateGame.h"
 #include "GameStateAbout.h"
+#include "GameStateScores.h"
 
 
 
@@ -78,7 +79,7 @@ void GameStateEditor::handleInput() {
                 this->game->pushState(new GameStateGame(this->game));
                 break;
             case 2:
-                //load
+                this->game->pushState(new GameStateScores(this->game));
                 break;
             case 3:
                 // about func

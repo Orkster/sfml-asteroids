@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 
 #include "GameState.hpp"
+#include "GameStateScores.h"
 
 class GameStateEditor : public GameState
 {

@@ -16,6 +16,7 @@ private:
     sf::Font font;
 
     void menu();
+    void highscores();
     void setTextForString(std::string, sf::Vector2f);
 
     int endScore;

@@ -6,8 +6,8 @@ int main(int, char const**) {
     srand(time(NULL));
 
     Game game;
-    //game.pushState(new GameStateStart(&game));
-    game.pushState(new GameStateEnd(&game, 6000));
+    game.pushState(new GameStateStart(&game));
+    //game.pushState(new GameStateEnd(&game, 6000));
     game.run();
     return EXIT_SUCCESS;
 }
