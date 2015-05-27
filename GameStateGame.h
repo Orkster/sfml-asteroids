@@ -35,13 +35,15 @@ class GameStateGame : public GameState
 
      void endGame();
      void setTextForString(std::string, sf::Vector2f);
-     void setBonus();
+     void setBonus(int randNum);
 
     public:
 
      virtual void draw(const float dt);
      virtual void update(const float dt);
      virtual void handleInput();
+
+     void destroyMet(std::vector<Asteroid>& asteroids);
 
     GameStateGame(Game* game);
 };

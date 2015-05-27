@@ -26,9 +26,11 @@ class Bonus: public sf::Drawable, public sf::Transformable {
         void breakDown();
         void update(float frametime);
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-        void speedy();
-        void laser();
-        void life();
+        void speedy(Spaceship &ship);
+        void destroy(std::vector<Asteroid>&, Spaceship&, int &number);
+        void life(Spaceship &ship);
+        int  getType();
+        void setUnactive();
 
     private:
         int level;
@@ -39,6 +41,7 @@ class Bonus: public sf::Drawable, public sf::Transformable {
         Spaceship ship;
         Asteroid asteroid;
         Bullet bullet;
+        int type;
 };
 
 #endif // BONUS_H

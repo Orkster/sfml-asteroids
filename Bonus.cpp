@@ -1,7 +1,7 @@
 #include "Bonus.h"
 
-float Bonus::speed[3] = {0.06f, 0.1f, 0.2f};//x2
-float Bonus::radius[3] = {40.0f, 20.0f, 10.0f};
+float Bonus::speed[3] = {0.06f, 0.1f, 0.02f};//x2
+float Bonus::radius[3] = {30.0f, 20.0f, 10.0f};
 
 Bonus::Bonus(){
 
@@ -13,6 +13,7 @@ Bonus::Bonus(int myType):
    int angle = rand() % 360;
    direction = sf::Vector2f(cos(angle * DEG2RAD), sin(angle * DEG2RAD));
 
+   type = myType;
    switch (myType){
        case 1:
        shape.setPointCount(4);
@@ -139,14 +140,35 @@ bool Bonus::checkPoint(sf::Vector2f point) {
    return (sqrDistance <= sqrRadius);
 }
 
-void Bonus::speedy(){
+void Bonus::speedy(Spaceship& ship){
     ship.speedBonus();
 }
 
-void Bonus::laser(){
-    bullet.laser();
+void Bonus::destroy(std::vector<Asteroid>& asteroids, Spaceship& ship, int& number){
+    std::vector<Asteroid>::iterator start_asteroids = asteroids.begin();
+
+    number -= asteroids.size();
+    while (start_asteroids != asteroids.end()) {
+        if (start_asteroids->isAlive()) {
+            start_asteroids->breakDown();
+            ++start_asteroids;
+        } else
+            start_asteroids = asteroids.erase(start_asteroids);
+    }
+
+    ship.addScore(500);
 }
 
-void Bonus::life(){
+void Bonus::life(Spaceship& ship){
     ship.increaseLives();
 }
+
+int Bonus::getType(){
+    return type;
+}
+
+void Bonus::setUnactive(){
+    is_alive = false;
+}
+
+

@@ -51,7 +51,12 @@ void GameStateScores::draw(const float dt) {
     this->game->window.draw(this->game->background);
 
     i = 0;
-    while(i < mass.size()){
+    int restriction;
+    if(mass.size() > 8)
+        restriction = 8;
+    else
+        restriction = mass.size();
+    while(i < restriction){     //mass.size
         setTextForString(mass[i].name, sf::Vector2f(110,160 + 50 * i));
         setTextForString(std::to_string(mass[i].points), sf::Vector2f(540,160 + 50 * i));
         std::cout<< std::endl;

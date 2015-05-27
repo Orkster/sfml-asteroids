@@ -3,6 +3,7 @@
 #include "QDebug"
 #include "iostream"
 #include "windows.h"
+#include "math.h"
 
 #include "GameState.hpp"
 
@@ -27,6 +28,9 @@ GameStateGame::GameStateGame(Game *game){
     asteroidCount = 0;
     createNewWave();
     this->game->gamePause = false;
+
+    ship.setDefault();
+    //bonusAster.;
 }
 
 void GameStateGame::createNewWave(){
@@ -34,6 +38,7 @@ void GameStateGame::createNewWave(){
         Asteroid a(0);
         asteroids.push_back(a);
     }
+    setBonus(rand()%3);
 }
 
 void GameStateGame::draw(const float dt) {
@@ -48,9 +53,12 @@ void GameStateGame::draw(const float dt) {
     for(std::vector<Asteroid>::iterator it = asteroids.begin(); it != asteroids.end(); ++it)
         this->game->window.draw(*it);
 
+    for(std::vector<Bonus>::iterator it = bonuses.begin(); it != bonuses.end(); ++it)
+        this->game->window.draw(*it);
+
     setTextForString("score " + std::to_string(ship.getScore()), sf::Vector2f(50,50));
     setTextForString("level " + std::to_string(level), sf::Vector2f(50,70));
-    setTextForString("lives " + std::to_string(ship.lives), sf::Vector2f(50,90));
+    setTextForString("lives " + std::to_string(ship.getLives()), sf::Vector2f(50,90));
 
     return;
 }
@@ -68,6 +76,15 @@ void GameStateGame::update(float frametime) {
             ++start_bullets;
         } else
             start_bullets = bullets.erase(start_bullets);
+    }
+
+    std::vector<Bonus>::iterator start_bonuses = bonuses.begin();
+    while (start_bonuses != bonuses.end()) {
+        if (start_bonuses->isAlive()) {
+            start_bonuses->update(frametime);
+            ++start_bonuses;
+        } else
+            start_bonuses = bonuses.erase(start_bonuses);
     }
 
     std::vector<Asteroid>::iterator start_asteroids = asteroids.begin();
@@ -101,13 +118,37 @@ void GameStateGame::update(float frametime) {
     //player - asteroids collision
     while(start_asteroids != asteroids.end()){
     if(start_asteroids->checkPoint(ship.getPosition())){
-        ship.lives -= 1;
+        ship.decreaseLives();
         ship.reset();
     }
     ++start_asteroids;
     }
 
-    if(ship.lives <= 0){
+    start_bonuses = bonuses.begin();
+
+    //player - bonus collision
+    while(start_bonuses != bonuses.end()){
+    if(start_bonuses->checkPoint(ship.getPosition())){
+        switch (start_bonuses->getType()){
+            case 1:
+            start_bonuses->life(ship);
+            start_bonuses->setUnactive();
+            break;
+            case 2:
+            start_bonuses->destroy(asteroids, ship, asteroidCount);
+            start_bonuses->setUnactive();
+            break;
+            case 3:
+            start_bonuses->speedy(ship);
+            start_bonuses->setUnactive();
+            break;
+        }
+    }
+    ++start_bonuses;
+    }
+
+
+    if(ship.getLives() <= 0){
         this->game->gamePause = true;
         Sleep(5);
         endGame();
@@ -172,7 +213,9 @@ void GameStateGame::handleInput() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
             this->game->gamePause = false;
         }
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+            this->game->pushState(new GameStateEditor(this->game));
+        }
 
 
         switch(event.type)
@@ -211,4 +254,15 @@ void GameStateGame::setTextForString(std::string text, sf::Vector2f pos){
     this->game->window.draw(textString);
 }
 
+void GameStateGame::setBonus(int randNum){
 
+    if(randNum == 0){
+        Bonus a(1);
+        bonuses.push_back(a);}
+    else if(randNum == 1){
+        Bonus b(2);
+        bonuses.push_back(b);}
+    else if(randNum == 2){
+        Bonus c(3);
+        bonuses.push_back(c);}
+}
